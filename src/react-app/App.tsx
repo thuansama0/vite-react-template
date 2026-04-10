@@ -2,7 +2,79 @@ import { useEffect } from "react";
 import "./App.css";
 
 const PROFILE_IMG = "/images/profile-formal.png";
-const HERO_IMG = "/images/hero-event.png";
+const HERO_BG_IMG = "/images/hero-portrait-final.png";
+const MOMENT_GROUPS: {
+	title: string;
+	description: string;
+	photos: { src: string; alt: string; caption: string }[];
+}[] = [
+	{
+		title: "Fintech Hackathon Vietnam",
+		description:
+			"Những khoảnh khắc áo trắng tại Fintech Hackathon Vietnam - môi trường thi đấu và học hỏi thực chiến.",
+		photos: [
+			{
+				src: "/images/hackathon-team-1.png",
+				alt: "Team nhận giải tại Fintech Blockchain Hackathon Vietnam",
+				caption: "Fintech Hackathon Vietnam - Team AI-PRO",
+			},
+			{
+				src: "/images/hackathon-awards.png",
+				alt: "Khoảnh khắc nhận giải tại Fintech Hackathon Vietnam",
+				caption: "Khoanh khac trao giai tai Fintech Hackathon Vietnam",
+			},
+			{
+				src: "/images/auditorium-team.png",
+				alt: "Khong khi hoi truong tai Fintech Hackathon Vietnam",
+				caption: "Khong khi su kien va ket noi cong dong dev",
+			},
+		],
+	},
+	{
+		title: "Mammothon Hackathon Vietnam",
+		description:
+			"Một số khoảnh khắc tại workshop cong nghe blockchain (ao xanh) - nơi minh hoc hoi va ket noi cong dong dev.",
+		photos: [
+			{
+				src: "/images/mammothon-moment-1.png",
+				alt: "Doi thi ao xanh nhan giai tai Mammothon Hackathon Vietnam",
+				caption: "Mammothon Hackathon Vietnam - khoanh khac nhan giai",
+			},
+			{
+				src: "/images/mammothon-moment-2.png",
+				alt: "Team ao xanh tai san khau Mammothon Hackathon Vietnam",
+				caption: "Mammothon Hackathon Vietnam - workshop cong nghe blockchain",
+			},
+			{
+				src: "/images/sui-gaming-team.png",
+				alt: "Team tai su kien cong dong blockchain",
+				caption: "Khoanh khac ket noi cong dong dev",
+			},
+		],
+	},
+	{
+		title: "Workshop & Hoat dong cong dong",
+		description:
+			"Nhung hoat dong workshop va networking minh tham gia de mo rong kien thuc va ket noi voi cong dong dev.",
+		photos: [
+			{
+				src: "/images/workshop-activity-1.png",
+				alt: "Khoanh khac giao luu tai workshop cong dong",
+				caption: "Workshop networking - giao luu va hoc hoi",
+			},
+			{
+				src: "/images/workshop-activity-2.png",
+				alt: "Khoanh khac trong buoi workshop cong nghe",
+				caption: "Workshop break - trao doi kinh nghiem",
+			},
+			{
+				src: "/images/workshop-activity-3.png",
+				alt: "Chan dung tai khong gian workshop",
+				caption: "Chan dung tai su kien workshop",
+			},
+		],
+	},
+];
 
 const TECH_GROUPS: { label: string; items: string[] }[] = [
 	{ label: "Ngôn ngữ", items: ["JavaScript", "C++", "Java", "PHP"] },
@@ -55,6 +127,7 @@ export default function App() {
 		<div className="cv-page">
 			<header className="cv-header">
 				<div className="cv-header__glow" aria-hidden />
+				<div className="cv-header__noise" aria-hidden />
 				<div className="cv-topbar cv-reveal">
 					<span className="cv-topbar__prompt" aria-hidden>
 						&gt;{" "}
@@ -72,6 +145,21 @@ export default function App() {
 					<time className="cv-topbar__meta" dateTime="2005-03-09">
 						09.03.2005
 					</time>
+				</div>
+				<div className="cv-hero-intro cv-reveal">
+					<a className="cv-hero-chip" href="#contact-heading">
+						OPEN TO WORK
+					</a>
+					<a className="cv-hero-chip cv-hero-chip--ghost" href="#projects-heading">
+						OPEN TO PROJECTS
+					</a>
+				</div>
+				<div
+					className="cv-hero-title cv-reveal"
+					style={{ backgroundImage: `url(${HERO_BG_IMG})` }}
+				>
+					<h2 className="cv-hero-title__text">THUAN SAMA</h2>
+					<p className="cv-hero-title__sub">Backend Developer Portfolio</p>
 				</div>
 
 				<div className="cv-header__inner cv-reveal">
@@ -171,24 +259,40 @@ export default function App() {
 							</h2>
 						</div>
 						<p className="cv-section__lead">
-							Một khoảnh khắc tại workshop công nghệ blockchain — nơi mình học hỏi
-							và kết nối cộng đồng dev.
+							Các khoảnh khắc được chia theo sự kiện/workshop để dễ theo dõi hành trình
+							học hỏi và hoạt động của mình.
 						</p>
 					</div>
-					<div className="cv-gallery">
-						<figure className="cv-gallery__figure">
-							<img
-								src={HERO_IMG}
-								alt="Nguyễn Minh Thuận tại Sui Learning Tour, GDU"
-								className="cv-gallery__img"
-								width={900}
-								height={600}
-							/>
-							<figcaption className="cv-gallery__cap">
-								<span className="cv-mono">Sui Learning Tour</span>
-								— Blockchain Technology Workshop
-							</figcaption>
-						</figure>
+					<div className="cv-moments cv-moments--alt">
+						{MOMENT_GROUPS.map((group) => (
+							<article className="cv-moment" key={group.title}>
+								<h3 className="cv-moment__title">{group.title}</h3>
+								<p className="cv-moment__desc">{group.description}</p>
+								<figure className="cv-moment__hero">
+									<img
+										src={group.photos[0].src}
+										alt={group.photos[0].alt}
+										className="cv-gallery__img cv-gallery__img--hero"
+										loading="lazy"
+									/>
+									<figcaption className="cv-gallery__cap">
+										{group.photos[0].caption}
+									</figcaption>
+								</figure>
+								<div className="cv-moment__thumbs">
+									{group.photos.slice(1).map((photo) => (
+										<figure key={photo.src} className="cv-gallery__tile cv-gallery__tile--thumb">
+											<img
+												src={photo.src}
+												alt={photo.alt}
+												className="cv-gallery__img cv-gallery__img--thumb"
+												loading="lazy"
+											/>
+										</figure>
+									))}
+								</div>
+							</article>
+						))}
 					</div>
 				</section>
 
@@ -328,21 +432,56 @@ export default function App() {
 					<div className="cv-card cv-card--flat cv-contact__card">
 						<ul className="cv-contact__list">
 							<li>
-								<span className="cv-contact__label">Điện thoại</span>
+								<span className="cv-contact__label">
+									<span className="cv-contact__icon" aria-hidden>
+										📞
+									</span>
+									Điện thoại
+								</span>
 								<a href="tel:+84972597280">0972 597 280</a>
 							</li>
 							<li>
-								<span className="cv-contact__label">Email</span>
+								<span className="cv-contact__label">
+									<span className="cv-contact__icon" aria-hidden>
+										✉️
+									</span>
+									Email
+								</span>
 								<a href="mailto:nguoichoi623@gmail.com">nguoichoi623@gmail.com</a>
 							</li>
 							<li>
-								<span className="cv-contact__label">GitHub</span>
+								<span className="cv-contact__label">
+									<span className="cv-contact__icon" aria-hidden>
+										📘
+									</span>
+									Facebook
+								</span>
+								<a
+									href="https://www.facebook.com/nguyen.minh.thuan.630946"
+									target="_blank"
+									rel="noreferrer"
+								>
+									facebook.com/nguyen.minh.thuan.630946
+								</a>
+							</li>
+							<li>
+								<span className="cv-contact__label">
+									<span className="cv-contact__icon" aria-hidden>
+										🐙
+									</span>
+									GitHub
+								</span>
 								<a href="https://github.com/thuansama0" target="_blank" rel="noreferrer">
 									github.com/thuansama0
 								</a>
 							</li>
 							<li>
-								<span className="cv-contact__label">Địa chỉ</span>
+								<span className="cv-contact__label">
+									<span className="cv-contact__icon" aria-hidden>
+										📍
+									</span>
+									Địa chỉ
+								</span>
 								<span>527 Phạm Văn Chiêu, P.15, TP. Hồ Chí Minh</span>
 							</li>
 						</ul>
