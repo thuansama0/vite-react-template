@@ -1,32 +1,117 @@
+import { useEffect } from "react";
 import "./App.css";
 
 const PROFILE_IMG = "/images/profile-formal.png";
 const HERO_IMG = "/images/hero-event.png";
 
+const TECH_GROUPS: { label: string; items: string[] }[] = [
+	{ label: "Ngôn ngữ", items: ["JavaScript", "C++", "Java", "PHP"] },
+	{ label: "Backend & CSDL", items: ["Spring Boot", "Node.js", "SQL Server", "MySQL"] },
+	{ label: "Công cụ", items: ["Git", "GitHub", "Postman"] },
+	{
+		label: "Kiến trúc & nguyên tắc",
+		items: [
+			"Clean Architecture",
+			"Decoupled Architecture",
+			"OOP",
+			"SOLID",
+			"Design Patterns",
+			"Factory",
+			"DAO",
+			"Observer",
+			"DTO",
+			"MVC",
+		],
+	},
+];
+
 export default function App() {
+	useEffect(() => {
+		const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+		const revealEls = document.querySelectorAll<HTMLElement>(".cv-reveal");
+
+		if (reduced.matches) {
+			revealEls.forEach((el) => el.classList.add("cv-reveal--shown"));
+			return;
+		}
+
+		const io = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (entry.isIntersecting) {
+						entry.target.classList.add("cv-reveal--shown");
+						io.unobserve(entry.target);
+					}
+				}
+			},
+			{ rootMargin: "0px 0px -6% 0px", threshold: 0.08 },
+		);
+
+		revealEls.forEach((el) => io.observe(el));
+		return () => io.disconnect();
+	}, []);
+
 	return (
 		<div className="cv-page">
 			<header className="cv-header">
 				<div className="cv-header__glow" aria-hidden />
-				<div className="cv-header__inner">
+				<div className="cv-topbar cv-reveal">
+					<span className="cv-topbar__prompt" aria-hidden>
+						&gt;{" "}
+					</span>
+					<span className="cv-topbar__path">cv.thuan</span>
+					<span className="cv-topbar__sep" aria-hidden>
+						{" "}
+						·{" "}
+					</span>
+					<span className="cv-topbar__meta">v1.0</span>
+					<span className="cv-topbar__sep" aria-hidden>
+						{" "}
+						·{" "}
+					</span>
+					<time className="cv-topbar__meta" dateTime="2005-03-09">
+						09.03.2005
+					</time>
+				</div>
+
+				<div className="cv-header__inner cv-reveal">
 					<div className="cv-header__text">
-						<p className="cv-eyebrow">Xin chào, mình là</p>
-						<h1 className="cv-name">Nguyễn Minh Thuận</h1>
-						<p className="cv-role">Backend Developer</p>
-						<p className="cv-meta">
-							<span className="cv-meta__item">Sinh ngày 09/03/2005</span>
-							<span className="cv-meta__dot" aria-hidden />
-							<span className="cv-meta__item">TP. Hồ Chí Minh</span>
+						<p className="cv-eyebrow">
+							<span className="cv-mono cv-eyebrow__gt" aria-hidden>
+								&gt;{" "}
+							</span>
+							Xin chào, mình là
+						</p>
+						<h1 className="cv-name">
+							<span className="cv-name__line">Nguyễn Minh</span>
+							<span className="cv-name__line cv-name__line--accent">Thuận</span>
+						</h1>
+						<p className="cv-role-stack">
+							<span className="cv-role-stack__main">Backend</span>
+							<span className="cv-role-stack__sub">Developer</span>
+						</p>
+						<p className="cv-locale">
+							<span>TP. Hồ Chí Minh</span>
+							<span className="cv-locale__dot" aria-hidden />
+							<span>Fresher</span>
+							<span className="cv-locale__dot" aria-hidden />
+							<span className="cv-mono cv-locale__coord" title="Gần đúng tọa độ TP.HCM">
+								10.8231° N, 106.6297° E
+							</span>
 						</p>
 						<p className="cv-tagline">
-							Fresher Backend — Spring Boot, Node.js, kiến trúc sạch &amp; SOLID.
+							Spring Boot, Node.js — Clean Architecture &amp; SOLID.
+						</p>
+						<p className="cv-status">
+							<span className="cv-status__dot" aria-hidden />
+							<span>Đang tìm cơ hội Fresher Backend</span>
 						</p>
 						<div className="cv-actions">
 							<a
 								className="cv-btn cv-btn--primary"
 								href="mailto:nguoichoi623@gmail.com"
 							>
-								Liên hệ
+								Gửi email
 							</a>
 							<a
 								className="cv-btn cv-btn--ghost"
@@ -50,12 +135,17 @@ export default function App() {
 				</div>
 			</header>
 
+			<hr className="cv-rule cv-reveal" />
+
 			<main className="cv-main">
-				<section className="cv-section" aria-labelledby="about-heading">
-					<h2 id="about-heading" className="cv-section__title">
-						Giới thiệu
-					</h2>
-					<div className="cv-card">
+				<section className="cv-section cv-reveal" aria-labelledby="about-heading">
+					<div className="cv-section__head">
+						<span className="cv-section__num">01</span>
+						<h2 id="about-heading" className="cv-section__title">
+							Đôi điều về mình
+						</h2>
+					</div>
+					<div className="cv-card cv-card--flat">
 						<p className="cv-prose">
 							Mình đang tìm cơ hội làm <strong>Fresher Backend Developer</strong> để
 							đóng góp phát triển hệ thống phần mềm. Mình đam mê xây dựng backend
@@ -67,11 +157,19 @@ export default function App() {
 					</div>
 				</section>
 
-				<section className="cv-section cv-section--split" aria-labelledby="gallery-heading">
+				<hr className="cv-rule cv-reveal" />
+
+				<section
+					className="cv-section cv-section--split cv-reveal"
+					aria-labelledby="gallery-heading"
+				>
 					<div className="cv-section__col">
-						<h2 id="gallery-heading" className="cv-section__title">
-							Hình ảnh
-						</h2>
+						<div className="cv-section__head">
+							<span className="cv-section__num">02</span>
+							<h2 id="gallery-heading" className="cv-section__title">
+								Hình ảnh
+							</h2>
+						</div>
 						<p className="cv-section__lead">
 							Một khoảnh khắc tại workshop công nghệ blockchain — nơi mình học hỏi
 							và kết nối cộng đồng dev.
@@ -87,100 +185,90 @@ export default function App() {
 								height={600}
 							/>
 							<figcaption className="cv-gallery__cap">
-								Sui Learning Tour — Blockchain Technology Workshop
+								<span className="cv-mono">Sui Learning Tour</span>
+								— Blockchain Technology Workshop
 							</figcaption>
 						</figure>
 					</div>
 				</section>
 
-				<section className="cv-section" aria-labelledby="achievements-heading">
-					<h2 id="achievements-heading" className="cv-section__title">
-						Thành tích
-					</h2>
-					<ul className="cv-list cv-list--achieve">
-						<li>
-							<strong>Giải Nhì</strong> Mammothon Hackathon Vietnam — chủ đề Celestia
-							Blockchain (2025)
+				<hr className="cv-rule cv-reveal" />
+
+				<section className="cv-section cv-reveal" aria-labelledby="achievements-heading">
+					<div className="cv-section__head">
+						<span className="cv-section__num">03</span>
+						<h2 id="achievements-heading" className="cv-section__title">
+							Thành tích
+						</h2>
+					</div>
+					<ul className="cv-timeline cv-timeline--compact">
+						<li className="cv-timeline__item">
+							<span className="cv-timeline__year">2025</span>
+							<div className="cv-timeline__body">
+								<p className="cv-timeline__title">
+									<strong>Giải Nhì</strong> — Mammothon Hackathon Vietnam
+								</p>
+								<p className="cv-timeline__desc">Chủ đề Celestia Blockchain.</p>
+							</div>
 						</li>
-						<li>
-							<strong>Giải Nhì</strong> Fintech Hackathon Vietnam — chủ đề blockchain
-							(2025)
+						<li className="cv-timeline__item">
+							<span className="cv-timeline__year">2025</span>
+							<div className="cv-timeline__body">
+								<p className="cv-timeline__title">
+									<strong>Giải Nhì</strong> — Fintech Hackathon Vietnam
+								</p>
+								<p className="cv-timeline__desc">Chủ đề blockchain.</p>
+							</div>
 						</li>
 					</ul>
 				</section>
 
-				<section className="cv-section" aria-labelledby="skills-heading">
-					<h2 id="skills-heading" className="cv-section__title">
-						Kỹ năng kỹ thuật
-					</h2>
-					<div className="cv-skills-grid">
-						<div className="cv-card cv-skill-block">
-							<h3 className="cv-skill-block__title">Ngôn ngữ</h3>
-							<div className="cv-tags">
-								{["JavaScript", "C++", "Java", "PHP"].map((t) => (
-									<span key={t} className="cv-tag">
-										{t}
-									</span>
-								))}
+				<hr className="cv-rule cv-reveal" />
+
+				<section className="cv-section cv-reveal" aria-labelledby="skills-heading">
+					<div className="cv-section__head">
+						<span className="cv-section__num">04</span>
+						<h2 id="skills-heading" className="cv-section__title">
+							Tech stack
+						</h2>
+					</div>
+					<p className="cv-section__lead cv-section__lead--tight">
+						Công cụ và nguyên tắc mình thường xuyên sử dụng trong dự án.
+					</p>
+					<div className="cv-tech">
+						{TECH_GROUPS.map((g) => (
+							<div key={g.label} className="cv-tech__group">
+								<p className="cv-tech__label cv-mono">{g.label}</p>
+								<div className="cv-tags cv-tags--bracket">
+									{g.items.map((t) => (
+										<span key={t} className="cv-tag cv-tag--bracket">
+											{t}
+										</span>
+									))}
+								</div>
 							</div>
-						</div>
-						<div className="cv-card cv-skill-block">
-							<h3 className="cv-skill-block__title">Backend &amp; CSDL</h3>
-							<div className="cv-tags">
-								{["Spring Boot", "Node.js", "SQL Server", "MySQL"].map((t) => (
-									<span key={t} className="cv-tag">
-										{t}
-									</span>
-								))}
-							</div>
-						</div>
-						<div className="cv-card cv-skill-block">
-							<h3 className="cv-skill-block__title">Công cụ</h3>
-							<div className="cv-tags">
-								{["Git", "GitHub", "Postman"].map((t) => (
-									<span key={t} className="cv-tag">
-										{t}
-									</span>
-								))}
-							</div>
-						</div>
-						<div className="cv-card cv-skill-block cv-skill-block--wide">
-							<h3 className="cv-skill-block__title">Kiến trúc &amp; nguyên tắc</h3>
-							<div className="cv-tags">
-								{[
-									"Clean Architecture",
-									"Decoupled Architecture",
-									"OOP",
-									"SOLID",
-									"Design Patterns",
-									"Factory",
-									"DAO",
-									"Observer",
-									"DTO",
-									"MVC",
-								].map((t) => (
-									<span key={t} className="cv-tag">
-										{t}
-									</span>
-								))}
-							</div>
-						</div>
+						))}
 					</div>
 				</section>
 
-				<section className="cv-section" aria-labelledby="soft-heading">
-					<h2 id="soft-heading" className="cv-section__title">
-						Kỹ năng mềm
-					</h2>
+				<hr className="cv-rule cv-reveal" />
+
+				<section className="cv-section cv-reveal" aria-labelledby="soft-heading">
+					<div className="cv-section__head">
+						<span className="cv-section__num">05</span>
+						<h2 id="soft-heading" className="cv-section__title">
+							Kỹ năng mềm
+						</h2>
+					</div>
 					<div className="cv-soft-grid">
-						<div className="cv-card">
+						<div className="cv-card cv-card--flat">
 							<h3 className="cv-skill-block__title">Giao tiếp &amp; hợp tác</h3>
 							<ul className="cv-list">
 								<li>Chủ động trao đổi, lắng nghe; nhận và đưa phản hồi xây dựng.</li>
 								<li>Kinh nghiệm làm việc nhóm trong môi trường nhịp độ cao.</li>
 							</ul>
 						</div>
-						<div className="cv-card">
+						<div className="cv-card cv-card--flat">
 							<h3 className="cv-skill-block__title">Tư duy &amp; chuyên nghiệp</h3>
 							<ul className="cv-list">
 								<li>Tư duy phân tích, giải quyết vấn đề; kiên trì khi debug hệ thống phức tạp.</li>
@@ -190,47 +278,54 @@ export default function App() {
 					</div>
 				</section>
 
-				<section className="cv-section" aria-labelledby="projects-heading">
-					<h2 id="projects-heading" className="cv-section__title">
-						Dự án cá nhân
-					</h2>
-					<div className="cv-projects">
-						<article className="cv-card cv-project">
-							<h3 className="cv-project__title">ShopCo — E-commerce Backend</h3>
-							<ul className="cv-list">
-								<li>
-									Backend mở rộng cho nền tảng thương mại điện tử với Spring Boot và
-									Neon (PostgreSQL).
-								</li>
-								<li>
-									Clean Architecture: Use Case, DTO, Repository, Domain; REST API cho
-									sản phẩm, danh mục, giỏ hàng, đơn hàng, người dùng.
-								</li>
-								<li>
-									Xác thực JWT, phân quyền RBAC (Spring Security); Hibernate/JPA; Swagger/OpenAPI;
-									kiểm thử JUnit/Mockito.
-								</li>
-							</ul>
-						</article>
-						<article className="cv-card cv-project">
-							<h3 className="cv-project__title">
-								Hệ thống quản lý sinh viên (đồ án nghiên cứu)
-							</h3>
-							<ul className="cv-list">
-								<li>
-									Nền tảng quản lý hồ sơ với Java Core và Spring MVC, tuân thủ MVC.
-								</li>
-								<li>Unit test JUnit/Mockito; tài liệu API Swagger/OpenAPI.</li>
-							</ul>
-						</article>
+				<hr className="cv-rule cv-reveal" />
+
+				<section className="cv-section cv-reveal" aria-labelledby="projects-heading">
+					<div className="cv-section__head">
+						<span className="cv-section__num">06</span>
+						<h2 id="projects-heading" className="cv-section__title">
+							Dự án
+						</h2>
 					</div>
+					<ul className="cv-timeline">
+						<li className="cv-timeline__item">
+							<span className="cv-timeline__year cv-mono">—</span>
+							<div className="cv-timeline__body">
+								<p className="cv-timeline__title">ShopCo — E-commerce Backend</p>
+								<p className="cv-timeline__desc">
+									Backend mở rộng với Spring Boot và Neon (PostgreSQL). Clean
+									Architecture; REST API sản phẩm, danh mục, giỏ, đơn, user. JWT +
+									RBAC; Swagger; JUnit/Mockito.
+								</p>
+							</div>
+						</li>
+						<li className="cv-timeline__item">
+							<span className="cv-timeline__year cv-mono">—</span>
+							<div className="cv-timeline__body">
+								<p className="cv-timeline__title">
+									Hệ thống quản lý sinh viên (đồ án nghiên cứu)
+								</p>
+								<p className="cv-timeline__desc">
+									Java Core &amp; Spring MVC, MVC nghiêm ngặt; JUnit/Mockito; Swagger/OpenAPI.
+								</p>
+							</div>
+						</li>
+					</ul>
 				</section>
 
-				<section className="cv-section cv-contact" aria-labelledby="contact-heading">
-					<h2 id="contact-heading" className="cv-section__title">
-						Liên hệ
-					</h2>
-					<div className="cv-card cv-contact__card">
+				<hr className="cv-rule cv-reveal" />
+
+				<section
+					className="cv-section cv-contact cv-reveal"
+					aria-labelledby="contact-heading"
+				>
+					<div className="cv-section__head">
+						<span className="cv-section__num">07</span>
+						<h2 id="contact-heading" className="cv-section__title">
+							Liên hệ
+						</h2>
+					</div>
+					<div className="cv-card cv-card--flat cv-contact__card">
 						<ul className="cv-contact__list">
 							<li>
 								<span className="cv-contact__label">Điện thoại</span>
@@ -255,8 +350,30 @@ export default function App() {
 				</section>
 			</main>
 
-			<footer className="cv-footer">
-				<p>© {new Date().getFullYear()} Nguyễn Minh Thuận — CV trực tuyến</p>
+			<hr className="cv-rule cv-rule--footer cv-reveal" />
+
+			<footer className="cv-footer cv-reveal">
+				<div className="cv-footer__brand" aria-hidden>
+					<span>N</span>
+					<span>M</span>
+					<span>T</span>
+				</div>
+				<p className="cv-footer__kicker cv-mono">&gt; let&apos;s connect</p>
+				<p className="cv-footer__headline">Cùng làm việc nhé</p>
+				<a className="cv-footer__cta" href="mailto:nguoichoi623@gmail.com">
+					Gửi email
+				</a>
+				<p className="cv-footer__copy">
+					© {new Date().getFullYear()} Nguyễn Minh Thuận — tham khảo layout từ{" "}
+					<a
+						href="https://www.sananes.co/"
+						target="_blank"
+						rel="noreferrer"
+						className="cv-footer__link"
+					>
+						sananes.co
+					</a>
+				</p>
 			</footer>
 		</div>
 	);
